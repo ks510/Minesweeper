@@ -1,0 +1,217 @@
+package part3;
+
+import static part3.Difficulty.EASY;
+
+/**
+ * Minesweeper model that manages the underlying data of the game.
+ *
+ * @author 164577
+ */
+public class Minesweeper {
+
+    private static final int EASYROWS = 10;
+    private static final int EASYCOLS = 10;
+    private static final int EASYMINES = 10;
+    
+    private static final int NORMALROWS = 14;
+    private static final int NORMALCOLS = 20;
+    private static final int NORMALMINES = 45;
+    
+    private static final int CRAZYROWS = 20;
+    private static final int CRAZYCOLS = 25;
+    private static final int CRAZYMINES = 120;
+    
+    private static int CUSTOMROWS = 0;
+    private static int CUSTOMCOLS = 0;
+    private static int CUSTOMMINES = 0;
+    
+    private static Difficulty selectedMode = EASY;
+    
+    private boolean gameFinished;
+
+    private Minefield minefield;
+    private int maxMines;
+    
+    /**
+     * Creates a new minefield game, based on the difficulty currently selected.
+     * The default setting is Easy mode.
+     */
+    public Minesweeper() {
+        switch (selectedMode) {
+            case EASY:
+                createMinefield(EASYROWS, EASYCOLS, EASYMINES);
+                break;
+            case NORMAL:
+                createMinefield(NORMALROWS, NORMALCOLS, NORMALMINES);
+                break;
+            case CRAZY:
+                createMinefield(CRAZYROWS, CRAZYCOLS, CRAZYMINES);
+                break;
+            case CUSTOM:
+                createMinefield(CUSTOMROWS, CUSTOMCOLS, CUSTOMMINES);
+                break;
+        }
+        gameFinished = false;
+    }
+    
+    /**
+     * Create a new minefield of the specified size and number of mines.
+     * @param rows
+     * @param columns 
+     * @param mines
+     */
+    public void createMinefield(int rows, int columns, int mines) {
+        this.minefield = new Minefield(rows, columns);
+        this.minefield.populate(mines);
+        this.maxMines = minefield.getCurrentMines();
+    }
+    
+    /**
+     * Checks if the current game has finished or not.
+     * @return true if the game has ended, false otherwise
+     */
+    public boolean isGameFinished() {
+        return gameFinished;
+    }
+    
+    public void toggleGameFinished(boolean state) {
+        gameFinished = state;
+    }
+    
+    /**
+     * Changes the difficulty of the game.
+     * @param mode 
+     */
+    public void setDifficulty(Difficulty mode) {
+        this.selectedMode = mode;
+    }
+    
+    /**
+     * Get the current difficulty mode of the game.
+     * @return difficulty mode
+     */
+    public Difficulty getDifficulty() {
+        return selectedMode;
+    }
+    
+    /**
+     * Sets the custom game size and number of mines.
+     * @param rows
+     * @param columns
+     * @param mines 
+     */
+    public void setCustomMode(int rows, int columns, int mines) {
+        this.CUSTOMROWS = rows;
+        this.CUSTOMCOLS = columns;
+        this.CUSTOMMINES = mines;
+    }
+    
+    /**
+     * Get the maximum number of rows in the current game.
+     * @return rows
+     */
+    public int getGameRows() {
+        return this.minefield.getRows();
+    }
+    
+    /**
+     * Get the maximum number of columns in the current game.
+     * @return columns
+     */
+    public int getGameCols() {
+        return this.minefield.getColumns();
+    }
+        
+    /**
+     * Get the maximum number of mines set in the current game.
+     * @return mines
+     */
+    public int getGameMines() {
+        return this.minefield.getCurrentMines();
+    }
+    
+    /**
+     * Get the specified tile from the minefield.
+     * @param row
+     * @param col
+     * @return 
+     */
+    public MineTile getTile(int row, int col) {
+        return this.minefield.getMinefieldTile(row, col);
+    }
+    
+    /**
+     * Provide a string representation of the specified tile in the game.
+     * @param row coordinate of tile
+     * @param col coordinate of tile
+     * @return state of the tile as a string
+     */
+    public String toStringTile(int row, int col) {
+        return this.minefield.getMinefieldTile(row, col).toString();
+    }
+
+    /**
+     * Checks if the state of the specified tile has been revealed or not.
+     * @param row coordinate of tile
+     * @param col coordinate of tile
+     * @return true if tile revealed, false otherwise
+     */
+    public boolean isTileRevealed(int row, int col) {
+        return this.minefield.getMinefieldTile(row, col).isRevealed();
+    }
+    
+    /**
+     * Attempts to reveal a tile on the minefield.
+     * @param row coordinate of the tile
+     * @param col coordinate of the tile
+     * @return true if the tile contains a mine, otherwise false
+     */
+    public boolean stepTile(int row, int col) {
+        return this.minefield.stepTile(row, col);
+    }
+    
+    /**
+     * Toggles a flag on the specified tile in the game.
+     * @param row coordinate of tile
+     * @param col coordinate of tile
+     */
+    public void toggleMark(int row, int col) {
+        this.minefield.toggleMark(row, col);
+    }
+    
+    /**
+     * Check if the specified tile in the game has been flagged.
+     * @param row coordinate of tile
+     * @param col coordinate of tile
+     * @return true if flagged, false otherwise
+     */
+    public boolean isTileMarked(int row, int col) {
+        return this.minefield.getMinefieldTile(row, col).isMarked();
+    }
+    
+    /**
+     * Check if all mines in game have been correctly flagged.
+     * @return true if all found, false otherwise
+     */
+    public boolean areAllMinesFound() {
+        return this.minefield.areAllMinesFound();
+    }
+
+    /**
+     * Gets the maximum number of mines that were set on the minefield.
+     * @return maximum mines
+     */
+    public int getMaxMines() {
+        return maxMines;
+    }
+    
+    /**
+     * Prints a string representation of the field for testing purposes.
+     */
+    public void printField() {
+        System.out.println(minefield.toString());
+    }
+    
+    
+    
+}
